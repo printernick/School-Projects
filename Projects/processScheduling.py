@@ -1,3 +1,34 @@
+'''
+
+This programs takes in a line of input from a 
+file in the format of a line of ints separated
+by spaces. For example:
+
+0 4 0 2 3 1
+
+The numbers are to be read in pairs with the 
+first number being the arrival time and the second
+number being the burst time. This program uses
+4 different scheduling algorithms:
+
+1. First Come, First Serve
+2. Shortest Job First
+3. Shortest Remaining Time First
+4. Multilevel Feedback
+
+After processing all processes using all algorithms,
+outputs the average real time followed by the 
+real times of each process for each algorithm. For the
+above example, it would output in this format
+
+4.66 4 6 4
+4.00 6 2 4
+3.33 7 2 1
+4.66 7 6 1
+
+
+'''
+
 class Scheduler:
     
     class process():
@@ -216,7 +247,7 @@ if __name__ == '__main__':
     MLF_output = s.generate_MLF_output()
     
     
-    output_file = open('53227224.txt', "w+")
+    output_file = open('output.txt', "w+")
     output_file.write(FCFS_output + '\n')
     output_file.write(SJF_output + '\n')
     output_file.write(SRT_output + '\n')
