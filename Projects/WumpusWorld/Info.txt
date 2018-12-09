@@ -1,0 +1,5 @@
+The only code written is within the MyAI.py file. Aside from headers and imports,
+the code was written by my partner Arman Amjad and me. I included the rest
+of the python files because they are necessary to run the code. I also included
+the manuals to understand how to use them, but these were given to us as part
+of the assignment.
