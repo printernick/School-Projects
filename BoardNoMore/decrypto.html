@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Decrypto | Board No More</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        
+        <script>
+        <!--
+            
+        
+            function updateSlide(n)
+            {
+                displaySlide(slideIndex += n);
+            }
+            
+            function displaySlide(n) 
+            {
+                var slides = document.getElementsByClassName("slideshow");
+                if (n > slides.length - 1)
+                {
+                    slideIndex = 0;
+                }
+                else if (n < 0)
+                {
+                    slideIndex = slides.length - 1;
+                }
+                
+                //loop through every slide and make them hidden
+                var i;
+                for (i = 0; i < slides.length; i++)
+                {
+                    slides[i].style.display = "none";
+                }
+                //make the current slide display
+                slides[slideIndex].style.display = "block";
+            }
+            
+            function CheckPurchase() 
+            {                
+                var quantityField = document.purchaseForm.quantity;
+                if (!(parseInt(quantityField.value) > 0))
+                {
+                    alert("Please enter a positive quantity.");
+                    return (false);
+                }              
+            }
+
+        // -->
+        </script>
+    </head>
+    <body>
+        
+        <div class="topnav">
+            <a href="index.html">Home</a>
+            <a href="boardGames.html">Board Games</a>
+        </div>
+        
+        <div class ="gridContainer">
+            <div class="slideShowContainer">
+            <img class="slideshow"
+                 src="https://images-na.ssl-images-amazon.com/images/I/81Yjom6iAwL._SL1500_.jpg">
+            <img class="slideshow" 
+                 src ="https://i.pinimg.com/originals/cd/1c/35/cd1c3553c050b18382e0720f583128e6.jpg"
+                 >
+            <img class ="slideshow"
+                 src="https://whatsericplaying.files.wordpress.com/2018/12/Gameplay-1-12.jpg?w=1180&h=787" >
+            
+            <img class ="slideshow"
+                 src="https://static1.squarespace.com/static/590b935dd482e9f9e5c8d394/t/5ab142ec2b6a28f498b00f31/1521566455327/pic1.jpg">
+           
+            <button class = "back" OnClick="updateSlide(-1)">&#10094;</button>
+            <button class = "next" OnClick="updateSlide(+1)">&#10095;</button>
+            
+            </div>
+            
+            <div class = "productInfoContainer">
+                <h2>
+                    Decrypto
+                </h2>
+                
+                <table>
+                    <tr>
+                        <th>Price</th>
+                        <th>Players</th>
+                        <th>Playing Time</th>
+                        <th>Age</th>
+                    </tr>
+                    <tr>
+                        <td>$15.00</td>
+                        <td>3-8</td>
+                        <td>15-45 Min</td>
+                        <td>12+</td>
+                    </tr>
+                </table>
+                
+                <p>
+                    Players compete in two teams in Decrypto, with each trying to correctly interpret the coded messages presented to 
+                    them by their teammates while cracking the codes they intercept from the opposing team.
+                </p>
+                
+            </div>
+            
+        
+            <div class = "formContainer">
+                <b>Purchase Below</b>
+                <br>
+                <form name="purchaseForm" onSubmit="return(CheckPurchase())" 
+                      action="MAILTO:emailaddress@email.com?subject=Board No More Order Confirmation"
+                      method = "post" enctype = "text/plain">
+                    Board Game:
+                    <select name="boardgame">
+                        <option value="Codenames">Codenames</option>
+                        <option value="One Night Ulitmate Werewolf">One Night Ultimate Werewolf</option>
+                        <option value="Secret Hitler">Secret Hitler</option>
+                        <option value="The Resistance: Avalon">The Resistance: Avalon</option>
+                        <option value="Monopoly">Monopoly</option>
+                        <option value="Clue">Clue</option>
+                        <option selected value="Decrypto">Decrypto</option>
+                        <option value="Scrabble">Scrabble</option>
+                        <option value="Taboo">Taboo</option>
+                        <option value="Risk">Risk</option>
+                    </select> 
+                    <br>
+                    Quantity:
+                    <input type="text" name="quantity" required>
+                    <br>
+                    First Name:
+                    <input type="text" name="firstname" required>
+                    <br>
+                    Last Name:
+                    <input type="text" name="lastname" required>
+                    <br>
+                    Phone Number:
+                    <input type="tel" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+                           placeholder = "Format: 123-456-7890" required>
+                    <br>
+                    Address:
+                    <input type="text" name="address" placeholder = "Street address" required>
+                    <br>
+                    City:
+                    <input type="text" name="city" required>
+                    <br>
+                    State/Province/Region:
+                    <input type="text" name="state" required>
+                    <br>
+                    Zip:
+                    <input type="text" name="state" pattern="[0-9]{5}"
+                           placeholder = "Format: 12345" required>
+                    <br>
+                    Delivery Option:
+                    <select name="delivery">
+                        <option selected value="standard">$5.00 Standard Shipping</option>
+                        <option value="ground">$3.00 6-day Ground Shipping</option>
+                        <option value="expedited">$8.00 2-day Expedited Shipping</option>
+                        <option value="overnight">$12.00 Overnight Shipping</option>
+                    </select> 
+                    <br>
+                    Credit Card Number:
+                    <input type="text" name="credit" pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}" 
+                           placeholder = "Format: 1234-5678-9012" required>
+                    <br>
+                    
+                    <input class="purchase" type="submit" value="Purchase">
+
+                </form>
+            </div>
+        </div>
+        
+        
+        
+        <script>
+        <!--
+            var slideIndex = 0;
+            displaySlide(slideIndex);
+        
+        // -->    
+        </script>
+        
+    </body>
+</html>
