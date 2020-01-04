@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [ "$1" != "" ]; then
+    echo "whoson: does not take any arguments"
+else
+    #get all unique users on
+    for user in $(users | xargs -n1 | uniq)
+    do
+	if groups $user 2> /dev/null | grep -q ugrad; then
+	    printf "$user "
+	fi
+    done
+    echo
+fi

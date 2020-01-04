@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ "$1" != "" ]; then
+    echo "nf: does not take any arguments"
+else
+    ls | wc -w
+fi

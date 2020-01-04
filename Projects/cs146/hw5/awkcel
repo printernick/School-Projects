@@ -1,0 +1,52 @@
+#!/bin/bash
+
+unique=ajdop12901jioandj1
+trap 'rm -f "$2$unique"; exit 1' 0 1 2 3 15
+
+#awkcel should have exactly two arguments
+if [ $# -ne 2 ]; then
+	echo "USAGE: awkcel {any standard awk program} FILENAME" >&2
+	exit 1
+fi
+
+
+#read file, remove comments
+cat $2 | sed '/^#/d' > "$2$unique"
+
+#get first line and create string for header values
+header="$(  cat $2$unique | head -n 1 | awk -F '\t' '{
+	
+		allValid="true"
+		for (i = 1; i <= NF; i++)
+		{
+			if ($i !~ /^[_a-zA-Z]/ )
+			{
+				allValid="false"
+				printf "exit 1"
+			}
+			
+		}
+
+		if (allValid == "true")
+		{
+			for (i = 1; i <= NF; i++)
+			{
+				printf "%s=$%d", $i, i
+				if (i !~ NF)
+				{
+					printf "; "
+				}
+			}
+		
+			
+		}
+
+		
+		
+		
+	}')"
+
+echo "${header}" | sh
+#get all lines except first one
+cat "$2$unique" | tail -n+2 | awk -F '\t' "{${header}} $1"
+rm -f "$2$unique"

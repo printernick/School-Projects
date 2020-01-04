@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ "$#" -gt 1 ]; then
+    echo "howmany: does not take any arguments"
+else
+
+    #if whoson script doesn't exist
+    if [ ! -e whoson ]; then
+	counter=0
+	for user in  $(users | xargs -n1 | uniq)
+	do
+	    if groups $user 2> /dev/null | grep -q ugrad; then
+		let counter++
+	    fi
+	done
+	echo $counter
+    else
+	bash whoson | wc -w
+    fi
+fi

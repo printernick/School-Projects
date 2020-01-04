@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ "$#" -eq 0 ]; then
+	echo "unrm: missing operand" >&2
+	exit 2
+fi
+
+TRASH=~/bin/.trash
+mkdir -p $TRASH
+
+for i in "$@"
+do
+	
+	#check to see if the file exists in the global trash bin
+	if [ ! -e $TRASH/$i ]; then
+		echo "unrm: cannot access '$i': No such file or directory" >&2
+	else
+		mv $TRASH/$i $PWD
+	fi
+done

@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#not enough arguments supplied
+if [ $# -eq 0 ]; then
+	echo "Usage: rename [-f] sed-substitution-command file1 file2 ..." >&2
+	exit 1
+fi
+
+isForcing=false
+regex="^-f$"
+
+
+if echo "$1" | grep -qP $regex; then
+
+	#did not provide either sed-substition-command or file
+	if [ $# -lt 2 ]; then
+		echo "Usage: rename [-f] sed-substitution-command file1 file2 ..." >&2
+		exit 1
+	else
+		isForcing=true
+		shift
+	fi
+fi
+
+sedSubstitution=s$1
+shift
+
+while [ $# -ne 0 ];
+do
+	
+	( ls $1 | tr '\r\n' ' '; ls $1 | sed $sedSubstitution; ) | cat \
+	       	| awk -v isForcing="$isForcing" '{
+			
+			if (isForcing=="true" || system("[ ! -e " $2 " ]")==0)
+			{
+				print "mv", $1, $2
+			}
+			else
+			{
+				print "echo", $2, "already exists. Did not rename", $1". >&2" 
+			}
+		}' | sh
+	shift
+done

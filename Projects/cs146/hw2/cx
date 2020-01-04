@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ "$#" -lt 1 ]; then
+    echo "Usage: cx FILES"
+fi
+
+# Loop until all parameters are used up
+while [ "$1" != "" ]; do
+
+    
+    if [ -e "$1" ]; then
+	chmod +x "$1"
+    else
+	echo "cx: cannot access '$1': No such file or directory"
+    fi
+
+    # Shift all the parameters down by one
+    shift
+
+done

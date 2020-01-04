@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ "$#" -ne 0 ]; then
+	echo "lsrm: takes no arguments" >&2
+	exit 1
+fi
+
+TRASH=~/bin/.trash
+mkdir -p $TRASH
+
+ls -l $TRASH

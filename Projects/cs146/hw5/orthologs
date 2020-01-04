@@ -1,0 +1,36 @@
+#!/bin/bash
+
+./awkcel '{
+		for (i=1; i<NF; i++)
+		{
+			for (k=i+1; k<NF; k++)
+			{
+				if ($i != "_" && $k != "_")
+					pairs[i][k]++;
+			}
+		}
+	}
+	END{
+		min=999999999	
+		for (i=1; i<NF; i++)
+		{
+			for (k=i+1; k<NF; k++)
+			{
+				print "(",i," ",k,"):", pairs[i][k]
+				if (pairs[i][k]>max)
+				{
+					max=pairs[i][k];
+					maxi=i;
+					maxk=k;
+				}
+				if (pairs[i][k]<min)
+				{
+					min=pairs[i][k];
+					mini=i;
+					mink=k;
+				}
+			}
+		}
+		print "max: ", max," (",maxi,", ",maxk,") min: ",min," (",mini,", ",mink,")";
+	}' orthologs.tsv
+

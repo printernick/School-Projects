@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ "$#" -ne 0 ]; then
+	echo "trash: takes no arguments" >&2
+	exit 2
+fi
+
+TRASH=~/bin/.trash
+mkdir -p $TRASH
+
+rm -r $TRASH

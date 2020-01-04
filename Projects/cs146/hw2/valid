@@ -1,0 +1,16 @@
+#!/bin/bash
+
+digReg="^\d+"
+illegalReg="[^a-zA-Z0-9_]"
+
+if [ "$1" = "" ]; then
+    echo "Usage: valid ARGUMENT"
+elif [ "$#" -gt "1" ]; then
+    echo "valid: too many arguments supplied"
+else
+    if echo "$1" | grep -qP $digReg || echo "$1" | grep -q $illegalReg; then
+	echo "no"
+    else
+	echo "yes"
+    fi
+fi

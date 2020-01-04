@@ -1,0 +1,47 @@
+#!/bin/bash
+
+if [ "$#" -eq 0 ]; then
+	echo "srm: missing operand" >&2
+	exit 2
+fi
+
+#Create a hidden directory to store safe removed files
+TRASH="~/bin/.trash"
+mkdir -p $TRASH
+
+option="^-"
+validShortOption="^-[f|i|I|r|R|d|v]+$"
+validLongOption="^--[force|interactive|one\-file\-system|no\-preserve\-root|preserve\-root|recursive|dir|verbose|help|version]$"
+
+hasOptions=false
+allValid=true
+hasFile=false
+
+for ((i=1; i<=$#; i++))
+do
+	#check to see if the argument was an option
+	if echo "${!i}" | grep -qE $option; then
+		hasOptions=true
+		if ! echo "${!i}" | grep -qE $validShortOption && ! echo "${!i}" | grep -qE $validLongOption; then
+			allValid=false
+			echo "srm: invalid option == '${!i}'" >&2
+		fi
+	#checks to see if the file exists
+	elif [ ! -e "${!i}" ]; then
+		allValid=false
+		echo "srm: cannot access ${!i}: No such file or directory" >&2
+	else
+		hasFile=true
+	fi
+done
+
+#if all the arguments are valid and an option was passed
+if $hasOptions && $allValid && $hasFile; then
+	rm "$@"
+#else if all arguments are valid and no option was passed
+#safe remove them all
+elif $allValid && $hasFile; then
+	mv "$@" ~/bin/.trash
+elif ! $hasFile; then
+	echo "srm: missing operand" >&2
+fi

@@ -1,0 +1,5 @@
+#!/bin/sh
+# Hayes's awk
+PROG="$1"
+shift
+exec awk "`cat /home/wayne/pub/cs146/awkcel/misc.awk`$PROG" "$@"

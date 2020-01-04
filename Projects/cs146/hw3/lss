@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#Regular expressions that checks 
+#if the input is a valid option
+validShortOptions="^-[a|A|b|B|c|C|d|D|f|F|g|G|h|H|i|k|l|L|N|o|q|Q|r|R|s|S|t|u|U|v|X|1|Z]+$"
+validLongOptions="^--(all|almost\-all|author|escape|ignore\-backups|directory|dired|classify|file\-type|full-time|group\-directories\-first|no\-group|human\-readable|si|dereference\-command\-line|dereference\-command\-line-symlink\-to\-dir|inode|kibibytes|dereference|numeric\-uid\-gid|literal|hide\-control\-chars|show\-control\-chars|quote\-name|reverse|recursive|size|lcontext|context|scontext)$"
+isOption="^-"
+
+#if there are no arguments
+if [ "$#" -eq 0 ]; then
+    ls -lS
+else
+    #This variable indicates if all of the provided arguments are valid
+    allValid=true;
+    for (( i=1; i <= "$#"; i++ )); do
+	if echo "${!i}" | grep -qE $isOption; then
+	    #if it is not an accepted option, all of the arguments are not
+	    #valid and it should display an error message
+	    if ! echo "${!i}" | grep -qE $validShortOptions && ! echo "${!i}" | grep -qE $validLongOptions; then
+		allValid=false;
+		echo "lss: invalid option -- '${!i}'" >&2
+	    fi
+	#if it is not an option, check if it is a valid filename
+        else
+	    #check if the file exists
+	    if [ ! -e "${!i}" ]; then
+		allValid=false
+		echo "lss: cannot access ${!i}: No such file or directory" >&2
+	    fi
+	fi
+    done
+
+    #only if all arguments are valid do you run the command
+    if $allValid; then
+	ls -lS "$@"
+    fi
+fi

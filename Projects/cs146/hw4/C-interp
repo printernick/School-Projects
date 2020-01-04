@@ -1,0 +1,33 @@
+#!/bin/bash
+
+tempDirectory=~/tmp/.whcjkdogma
+
+#catch exit signals and always delete tmp files
+trap "rm -rf $tempDirectory" 0 1 2 3 15
+
+#append .c to file name
+cFileName="$0"
+cFileName="$cFileName.c"
+
+if [ -e "$cFileName" ]; then
+	mkdir -p $tempDirectory
+
+
+	#copy and move copied file
+	cp $cFileName copy.c
+	mv copy.c $tempDirectory
+
+	#compile and run file
+	gcc $tempDirectory/copy.c
+	mv a.out $tempDirectory
+	$tempDirectory/a.out
+
+
+	#remove temporary directory 
+	rm -r $tempDirectory
+
+else
+	echo "$0: cannot access $cFileName: No such file or directory"
+	exit 126
+fi	
+
