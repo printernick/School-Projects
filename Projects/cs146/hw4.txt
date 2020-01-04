@@ -1,0 +1,128 @@
+                                CS 146
+                                ======
+                              Assignment #4
+                 Due Thu 16 May 2019 at start of lecture
+
+1) [10 marks] Say you are really low on disk space on openlab, and you have some
+   utility programs in C that you like to use often, but you don't have enough
+   disk space to keep the compiled executables around all the time. Each program
+   consists of just one .c file.  However, you don't want to manually re-compile
+   each C program each time you want to use it.
+
+   Write a short shell script called "C-interp" which is intended to have soft
+   links point at it, and pretends to be a C language interpreter.  That is,
+   if you have C file "foo.c", then you would make a link "ln -s C-interp foo".
+   Then, what C-interp does, when called as "foo", is compile "foo.c" and run
+   the resulting executable on the arguments given to "foo".  (You can test it
+   on your solutions to the other questions in this assignment.)
+
+   Some caveats:
+   - delete ALL temporary files generated, inculding the executable after it's
+     been executed.
+   - To ensure you don't delete any files that exist before you start whose
+     names may conflict with the temporary filenames you choose, put *all*
+     temporary files (including the executable) in /tmp/DDD where DDD is a
+     random directory name (doesn't need to be 3 characters).  Be sure to
+     remove the directory after C-interp finishes.
+   - the executable should be called with argv[0] equal to the basename of the
+     .c file, without the '.c', eg "foo.c" gets called as "foo" (but the path
+     can [and should!] be different, so the compiled executable should be in a
+     temporary directory).
+   - to ensure that your executable name doesn't conflict with other users,
+     you should put the executable in a uniquely-named subdirectory of /tmp.
+     In fact, it would be best if all your temp files went into this directory,
+     as long as the entire directory is removed when the executable is finished.
+   - ensure that the temporary files are deleted even if the program is
+     interrupted.  ie, use the "trap" command in the Bourne shell to trap
+     signals 0 (Exit), 1 (Hangup), 2 (Interrupt) ,3 (Quit), and 15 (Terminate).
+     See signal(5) for a list and more details about signals.
+
+2) [20 marks] Write a filter in C that prints M lines out of every N.  It can
+   be done using the shell and awk (see ~wayne/pub/ics54).  It's more simple
+   and efficient in C.  The program's name is "every".  It is called like this:
+
+        $ every [-N,M] [list-of-files]
+
+   where N, M are both integers, N > 0, M >= 0, and M <= N. (Anything in square
+   brackets '[]' is optional, and doesn't need to appear on the command line.
+   This is standard for Unix manual pages.)  The option argument, if present,
+   must come before any filenames.  If no "-N,M" option is on the command line,
+   then "every" should look for an environment variable called EVERY and take
+   its options from there, in the same format as the command line.  If "every"
+   can't find options either on the command line or in the environment variable
+   EVERY, then the default is "-1,1".  That is, with no options, "every"
+   acts just like cat(1).  For example, if we number lines starting at 0, then
+
+        $ every -10,2 foo.c
+
+   prints out the following lines of foo.c: 0,1, 10,11, 20,21, 30,31,
+   etc.  If M is omitted, eg
+
+        $ every -10 foo.c
+
+   then it defaults to 1.  (If either N or M is specified on the command line,
+   the environment variable EVERY should be ignored.) If multiple files are
+   given on the command line, each one should be handled INDEPENDENTLY, so
+   "-10,2" means lines 0,1,10,11, etc. of each file. Like all Unix filters, if
+   no files are on the command line, every processes its standard input
+
+
+
+3) [30 marks] Re-write srm, unrm, and trash in C.  You do not have to
+   implement it the same way you did in assignment #3 (i.e., you are
+   free once again to choose between the "global trash directory" or
+   "hide locally" methods).  You may not use any external programs (for
+   example, you can't use system(3s), fork(2), or exec(2)), with one
+   exception (described below).  You may use the C standard library for
+   what little I/O there will be, but otherwise you are restricted to
+   using Unix system calls.  The manual pages you may want to look at
+   will include rename(2), mkdir(2), rmdir(2), creat(2), open(2),
+   close(2), unlink(2).  The one exception to using external programs
+   is that "trash" may use popen(3s) and "ls" to find the list of files
+   that are to be trashed.  In fact, if you find it useful, srm and
+   unrm may also use popen(3s) and "ls", but popen(3s) may not be used
+   to call anything other than "ls".
+
+   There are several considerations that you should think about when
+   deciding whether to implement it with "global trash directory" or
+   "hide locally".  First, if you use "global trash directory", then
+   remember that "srm" must work even if you're srm'ing a file that is
+   not on the same mounted file system.  For example, if your trash
+   directory is in your home directory, then srm'ing a file that's in
+   /tmp will require you to unlink it from /tmp, and copy it to your
+   trash directory.  (The "mv" program handled that automatically for
+   you when you wrote it as a shell script.)  Similar comments apply to
+   unrm.  On the other hand, if you implement it using the "hide
+   locally" options, then srm and unrm only need to use rename(2) (and
+   maybe mkdir(2)), but "trash" becomes more complex: you must find
+   all the places that srm'd files are hiding, and you can't use
+   anything other than popen(3s) and "ls" to do it.  (You may also want
+   to use stat(2) and/or lstat(2) but it's not necessary.)  In this
+   case, you may assume that the only places you have to look are in
+   your home directory, and in /tmp, and in any case you'll have to
+   recursively descend directories looking for files to trash.  And
+   when you're in /tmp, remember not to attempt to remove anybody
+   else's files!  (You may do this either by using a name convention
+   that's unlikely to conflict with somebody else's, or by using
+   stat(2)/lstat(2) to verify ownership of the files you're trying to
+   move around.)
+
+   Partial marks may be awarded by writing only 1 or 2 of srm, unrm,
+   and trash in C, and using the shell-script version of the ones that
+   you don't translate into C.  I can't say exactly how many marks will
+   each will be worth: the distribution will be different depending
+   upon which method you implement, but in any case the harder the
+   program, the more marks it's worth.
+
+   GENERAL COMMENTS: Style and modularity of questions 2 and 3 are
+   important.  Try to keep the design simple and elegant.  Study
+   chapters 6 and 7 of K&P, but skip section 7.2, since directory
+   access has changed significantly since 1984.  Note that perror(3c)
+   replaces K&P's use of errno and sys_errlist talked about in 7.1.
+
+   Finally, keep a close eye on the Newsgroup ut.cdf.csc209h.  There are
+   likely to be very helpful discussions and clarifications almost every
+   day.  Start now, this is not the kind of assignment you want be doing
+   the night before.  It's not long once you understand how everything
+   meshes together, but the design decisions and reading and understanding
+   the manual pages will take alot of effort.
